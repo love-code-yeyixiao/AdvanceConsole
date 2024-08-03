@@ -173,23 +173,24 @@ BOOL DefaultWork() {
                 strcpy_s(Targetpath, vctCmd[2].c_str());
                 strcpy_s(password, vctCmd[3].c_str());
                 BOOL isSucced = EncryptFileWithMS(Sourcepath, Targetpath, password);
-                cout<<isSucced?"Encryption Successfully!": "Encryption Failed!";
+                cout << (isSucced ? "Encryption Successfully!" : "Encryption Failed!") << endl;
             }
             continue;
         }
          if (_strcmpi("DecryptWithMS", vctCmd[0].c_str()) == 0) {
                 isPraseSuccess = TRUE;
+                
                 if (vctCmd.size() != 4) {
                     isPraseSuccess = FALSE;
                     ErrorTip(1000);
                 }
-                else {
+                else{
                     char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 }, password[600] = { 0 };
                     strcpy_s(Sourcepath, vctCmd[1].c_str());
                     strcpy_s(Targetpath, vctCmd[2].c_str());
                     strcpy_s(password, vctCmd[3].c_str());
                     BOOL isSucced = DecryptFileWithMS(Sourcepath, Targetpath, password);
-                    cout << isSucced ? "Encryption Successfully!" : "Encryption Failed!";
+                    cout << (isSucced ? "Encryption Successfully!" : "Encryption Failed!")<<endl;
                 }
                 continue;
          }
@@ -212,7 +213,7 @@ BOOL DefaultWork() {
                  ErrorTip(1000);
              }
              else {
-                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_MD5)) {
+                 if (GetFileHASH(vctCmd[1].c_str(), CALG_MD5,16,NULL)) {
                      cout << "Failed to get hash!" << endl;
                  }
              }
@@ -225,7 +226,7 @@ BOOL DefaultWork() {
                  ErrorTip(1000);
              }
              else {
-                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_SHA1)) {
+                 if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA1,160,NULL)) {
                      cout << "Failed to get hash!" << endl;
                  }
              }
@@ -238,7 +239,7 @@ BOOL DefaultWork() {
                  ErrorTip(1000);
              }
              else {
-                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_SHA_256)) {
+                 if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA_256, 256,MS_ENH_RSA_AES_PROV)) {
                      cout << "Failed to get hash!" << endl;
                  }
              }
@@ -251,9 +252,33 @@ BOOL DefaultWork() {
                  ErrorTip(1000);
              }
              else {
-                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_SHA_512)) {
+                 if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA_512,512, MS_ENH_RSA_AES_PROV)) {
                      cout << "Failed to get hash!" << endl;
                  }
+             }
+             continue;
+         }
+         if (_strcmpi("Base64Encode", vctCmd[0].c_str()) == 0) {
+             isPraseSuccess = TRUE;
+             if (vctCmd.size() != 2) {
+                 isPraseSuccess = FALSE;
+                 ErrorTip(1000);
+             }
+             else {
+                 unsigned char* result = acl_base64_encode(vctCmd[1].c_str(), vctCmd[1].length());
+                 cout << "Base64 result:" << result<<endl;
+             }
+             continue;
+         }
+         if (_strcmpi("Base64Decode", vctCmd[0].c_str()) == 0) {
+             isPraseSuccess = TRUE;
+             if (vctCmd.size() != 2) {
+                 isPraseSuccess = FALSE;
+                 ErrorTip(1000);
+             }
+             else {
+                 unsigned char* result = acl_base64_decode(vctCmd[1].c_str(), vctCmd[1].length());
+                 cout << "Base64 result:" << result << endl;
              }
              continue;
          }
