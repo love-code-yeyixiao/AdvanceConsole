@@ -43,7 +43,6 @@ BOOL initOutput() {
     if (!isArgument) {
         cout << cszNoArgu<<endl;
         globalType = 1;
-        return TRUE;
     }
     cout << cszCopyright << endl  <<  cszLicense << endl;
     return TRUE;
