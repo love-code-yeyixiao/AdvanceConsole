@@ -8,6 +8,7 @@
 #include<vector>
 #include<exception>
 #include<algorithm>
+#include<Objbase.h>
 
 #include "common.h"
 
@@ -67,24 +68,37 @@ void errorGrammar()
     cout << "Command usage syntax error!" << endl;
     
 }
+void errorE2Big() {
+    cout << "The list of independent variables is too large"<<endl;
+}
 void errorNotFound() {
     if (inputBuf!=NULL)
         cout<< "'" << inputBuf << "'" << " is not an internal or external command, nor is it a runnable program or a batch file" << endl;
 }
+void errorNoCmd() {
+    cout << "Can't find system CMD!";
+}
 void ErrorTip(ULONG uCode) {
     if (uCode == 1000) {
         errorGrammar();
-        LogOutput(uCode);
     }
     else if (uCode == 1001) {
         errorNotFound();
-        LogOutput(uCode);
     }
+    else if (uCode == 1003) {
+        errorE2Big();
+    }
+    else if (uCode == 1004) {
+        errorNoCmd();
+    }
+    LogOutput(uCode);
 }
 void PraseCDAndExecute() {
     string path = vctCmd[1];
-    if (GetCharNumberOfString(path, ".") == vctCmd[1].length())
-        throw "Not Impent";
+    //if (GetCharNumberOfString(path, ".") == vctCmd[1].length())
+    if (SetCurrentDirectoryA(path.c_str()) == 0)
+        cout << "Failed to change Current Directory!"<<endl;
+    
 }
 BOOL DefaultWork() {
     BOOL state = TRUE;
@@ -101,7 +115,7 @@ BOOL DefaultWork() {
         if (vctCmd.empty()) {
             continue;
         }
-        if (_strcmpi("cd", vctCmd[0].c_str()) == 0) {
+        /*if (_strcmpi("cd", vctCmd[0].c_str()) == 0) {
             isPraseSuccess = TRUE;
             if (vctCmd.size() != 2) {
                 isPraseSuccess = FALSE;
@@ -133,6 +147,34 @@ BOOL DefaultWork() {
         else if (_strcmpi("color", vctCmd[0].c_str()) == 0) {
             isPraseSuccess = TRUE;
             system(inputBuf);
+        }*/
+        if (_strcmpi("cd", vctCmd[0].c_str()) == 0) {
+            isPraseSuccess = TRUE;
+            if (vctCmd.size() != 2) {
+                isPraseSuccess = FALSE;
+                ErrorTip(1000);
+            }
+            else {
+                PraseCDAndExecute();
+            }
+            continue;
+        }
+        else if (_strcmpi("sumGUID", inputBuf) == 0) {
+            GUID guid;
+            if (CoCreateGuid(&guid) == S_OK) {
+                char *guidBuf = GuidToString(guid);
+                cout << guidBuf<<endl;
+                free(guidBuf);
+            }
+            else {
+                cout << "Failed to generate Guid!";
+            }
+            continue;
+        }
+        errno = 0;
+        int rtn = system(inputBuf);
+        if (rtn==-1 && errno==E2BIG) {
+            ErrorTip(1003);
         }
 #ifdef _DEBUG
         else if (_strcmpi(inputBuf, "crashCmd") == 0) {
@@ -140,7 +182,14 @@ BOOL DefaultWork() {
             throw "I crashed the cmd!";
         }
 #endif
-        else if (inputBuf != "" && inputBuf != NULL) {
+        else if (rtn == -1 && errno == ENOENT) {
+            ErrorTip(1004);
+        }
+        else if (rtn == -1 && errno == ENOEXEC)
+        {
+            ErrorTip(1001);
+        }
+        else if (inputBuf != "" && inputBuf != NULL&&rtn==-1) {
             isPraseSuccess = FALSE;
             ErrorTip(1001);
         }
