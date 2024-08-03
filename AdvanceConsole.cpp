@@ -9,10 +9,13 @@
 #include<exception>
 #include<algorithm>
 #include<Objbase.h>
+#include<wincred.h>
 
 #include "common.h"
 
 using namespace std;
+
+#pragma comment (lib, "credui.lib")
 
 //
 //Global Varierables
@@ -32,8 +35,8 @@ BOOL initOutput() {
         *cszNoArgu="No command arguments.",* cszCopyright="Copyright Love-Code-Yeyixiao",*cszLicense="You are now not allowed to recompile, use or distribute the application after modifying the source code.";
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED);
-    for (int i = 0; i <= 1000; i++)
-        printf(" ");
+    for (int i = 0; i <= 10; i++)
+        printf("                                                                                          ");
     cout.flush();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_RED);
     system("cls");
@@ -163,6 +166,23 @@ BOOL DefaultWork() {
         }
         if (_strcmpi("EncryptWithMS", vctCmd[0].c_str()) == 0) {
             isPraseSuccess = TRUE;
+            if (vctCmd.size() == 3) {
+                char username[35] = "qwq", password[2560] = { 0 };
+                BOOL pfSave = false;
+                DWORD result=CredUICmdLinePromptForCredentialsA("AdvanceConsoleEncryptionProcess", NULL, 0, username, 35, password, 2560, &pfSave, CREDUI_FLAGS_DO_NOT_PERSIST | CREDUI_FLAGS_EXCLUDE_CERTIFICATES | CREDUI_FLAGS_USERNAME_TARGET_CREDENTIALS);
+                if (result == NO_ERROR) {
+                    char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 };
+                    strcpy_s(Sourcepath, vctCmd[1].c_str());
+                    strcpy_s(Targetpath, vctCmd[2].c_str());
+                    BOOL isSucced = EncryptFileWithMS(Sourcepath, Targetpath, password);
+                    cout << (isSucced ? "Encryption Successfully!" : "Encryption Failed!") << endl;
+                }
+                else {
+                    cout << "Failed to get password!" << endl;
+                }
+                SecureZeroMemory(password, sizeof(password));
+                continue;
+            }
             if (vctCmd.size() != 4) {
                 isPraseSuccess = FALSE;
                 ErrorTip(1000);
@@ -179,7 +199,22 @@ BOOL DefaultWork() {
         }
          if (_strcmpi("DecryptWithMS", vctCmd[0].c_str()) == 0) {
                 isPraseSuccess = TRUE;
-                
+                if (vctCmd.size() == 3) {
+                    char username[35] = "qwq", password[2560] = { 0 };
+                    BOOL pfSave = false;
+                    if (CredUICmdLinePromptForCredentialsA("AdvanceConsoleDecryptionProcess", NULL, 0, username, 35, password, 2560, &pfSave, CREDUI_FLAGS_DO_NOT_PERSIST | CREDUI_FLAGS_EXCLUDE_CERTIFICATES | CREDUI_FLAGS_USERNAME_TARGET_CREDENTIALS) == NO_ERROR) {
+                        char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 };
+                        strcpy_s(Sourcepath, vctCmd[1].c_str());
+                        strcpy_s(Targetpath, vctCmd[2].c_str());
+                        BOOL isSucced = DecryptFileWithMS(Sourcepath, Targetpath, password);
+                        cout << (isSucced ? "Encryption Successfully!" : "Encryption Failed!") << endl;
+                    }
+                    else {
+                        cout << "Failed to get password!" << endl;
+                    }
+                    SecureZeroMemory(password,sizeof(password));
+                    continue;
+                }
                 if (vctCmd.size() != 4) {
                     isPraseSuccess = FALSE;
                     ErrorTip(1000);
