@@ -29,7 +29,7 @@ BOOL checkArguments() {
 }
 BOOL initOutput() {
     const CHAR* cszTitle = "Advance Console 0.0.1 Working Version",
-        *cszNoArgu="No command arguments.";
+        *cszNoArgu="No command arguments.",* cszCopyright="Copyright Love-Code-Yeyixiao",*cszLicense="You are now not allowed to recompile, use or distribute the application after modifying the source code.";
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED);
     for (int i = 0; i <= 1000; i++)
@@ -45,13 +45,16 @@ BOOL initOutput() {
         globalType = 1;
         return TRUE;
     }
+    cout << cszCopyright << endl  <<  cszLicense << endl;
     return TRUE;
 }
 BOOL init() {
     BOOL status = TRUE;
     status=initOutput();
+    SetConsoleTitleA("Advance Console 0.0.1 Working Version");
     return status;
 }
+
 
 
 //
@@ -159,16 +162,237 @@ BOOL DefaultWork() {
             }
             continue;
         }
-        else if (_strcmpi("sumGUID", inputBuf) == 0) {
-            GUID guid;
-            if (CoCreateGuid(&guid) == S_OK) {
-                char *guidBuf = GuidToString(guid);
-                cout << guidBuf<<endl;
-                free(guidBuf);
+        if (_strcmpi("EncryptWithMS", vctCmd[0].c_str()) == 0) {
+            isPraseSuccess = TRUE;
+            if (vctCmd.size() != 4) {
+                isPraseSuccess = FALSE;
+                ErrorTip(1000);
             }
             else {
-                cout << "Failed to generate Guid!";
+                char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 }, password[600] = {0};
+                strcpy_s(Sourcepath, vctCmd[1].c_str());
+                strcpy_s(Targetpath, vctCmd[2].c_str());
+                strcpy_s(password, vctCmd[3].c_str());
+                BOOL isSucced = EncryptFileWithMS(Sourcepath, Targetpath, password);
+                cout<<isSucced?"Encryption Successfully!": "Encryption Failed!";
             }
+            continue;
+        }
+         if (_strcmpi("DecryptWithMS", vctCmd[0].c_str()) == 0) {
+                isPraseSuccess = TRUE;
+                if (vctCmd.size() != 4) {
+                    isPraseSuccess = FALSE;
+                    ErrorTip(1000);
+                }
+                else {
+                    char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 }, password[600] = { 0 };
+                    strcpy_s(Sourcepath, vctCmd[1].c_str());
+                    strcpy_s(Targetpath, vctCmd[2].c_str());
+                    strcpy_s(password, vctCmd[3].c_str());
+                    BOOL isSucced = DecryptFileWithMS(Sourcepath, Targetpath, password);
+                    cout << isSucced ? "Encryption Successfully!" : "Encryption Failed!";
+                }
+                continue;
+         }
+        else if (_strcmpi("sumGUID", inputBuf) == 0) {
+             isPraseSuccess = TRUE;
+            GUID guid;
+            if (CoCreateGuid(&guid) == S_OK) {
+                char* guidBuf = GuidToString(guid);
+                cout << guidBuf << endl;
+            }
+            else {
+                cout << "Failed to generate Guid!" << endl;
+            }
+            continue;
+        }
+         if (_strcmpi("GetFileMD5", vctCmd[0].c_str()) == 0) {
+             isPraseSuccess = TRUE;
+             if (vctCmd.size() != 2) {
+                 isPraseSuccess = FALSE;
+                 ErrorTip(1000);
+             }
+             else {
+                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_MD5)) {
+                     cout << "Failed to get hash!" << endl;
+                 }
+             }
+             continue;
+         }
+         if (_strcmpi("GetFileSHA", vctCmd[0].c_str()) == 0) {
+             isPraseSuccess = TRUE;
+             if (vctCmd.size() != 2) {
+                 isPraseSuccess = FALSE;
+                 ErrorTip(1000);
+             }
+             else {
+                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_SHA1)) {
+                     cout << "Failed to get hash!" << endl;
+                 }
+             }
+             continue;
+         }
+         if (_strcmpi("GetFileSHA256", vctCmd[0].c_str()) == 0) {
+             isPraseSuccess = TRUE;
+             if (vctCmd.size() != 2) {
+                 isPraseSuccess = FALSE;
+                 ErrorTip(1000);
+             }
+             else {
+                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_SHA_256)) {
+                     cout << "Failed to get hash!" << endl;
+                 }
+             }
+             continue;
+         }
+         if (_strcmpi("GetFileSHA512", vctCmd[0].c_str()) == 0) {
+             isPraseSuccess = TRUE;
+             if (vctCmd.size() != 2) {
+                 isPraseSuccess = FALSE;
+                 ErrorTip(1000);
+             }
+             else {
+                 if (!GetFileHASH(vctCmd[1].c_str(), CALG_SHA_512)) {
+                     cout << "Failed to get hash!" << endl;
+                 }
+             }
+             continue;
+         }
+        else if (_strcmpi("exit", inputBuf) == 0) {
+            cout << "Press Enter to exit AdvanceConsole";
+            cin.getline(inputBuf, 0);
+            exit(0);
+        }
+        else if (_strcmpi("ForceExit", inputBuf) == 0) {
+            CloseWindow(GetConsoleWindow());
+            DestroyWindow(GetConsoleWindow());
+            PostQuitMessage(0);
+            TerminateProcess(GetCurrentProcess(), 0);
+            TerminateThread(GetCurrentThread(), 0);
+            ExitProcess(0);
+            ExitThread(0);
+            exit(0);
+        }
+        else if (_strcmpi("KillFocusWindow", inputBuf) == 0)
+        {
+            cout << "Wait 3 seconds";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << "." << endl;
+            HWND hWnd = GetForegroundWindow();
+            CloseWindow(hWnd);
+            Sleep(2000);
+            DestroyWindow(IsWindow(hWnd)?hWnd:NULL);
+            SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+            continue;
+        }
+        else if (_strcmpi("KillFocusWindowForce", inputBuf) == 0)
+        {
+            cout << "Wait 3 seconds";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << "." << endl;
+            HWND hWnd = GetForegroundWindow();
+            ULONG pid = 0;
+            GetWindowThreadProcessId(hWnd, &pid);
+            CloseWindow(hWnd);
+            Sleep(2000);
+            DestroyWindow(IsWindow(hWnd) ? hWnd : NULL);
+            SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+            PostMessage(hWnd, WM_QUIT, NULL, NULL);
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
+            if (hProcess != NULL && hProcess != INVALID_HANDLE_VALUE) {
+                TerminateProcess(hProcess, 0);
+            }
+            else {
+                cout << "Target could be killed by normal ways or can't be terminated!" << endl;
+            }
+            continue;
+        }
+        else if (_strcmpi("KillCursorWindow", inputBuf) == 0)
+        {
+            cout << "Wait 3 seconds";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << "." << endl;
+            POINT poi;
+            GetCursorPos(&poi);
+            HWND hWnd = WindowFromPoint(poi);
+            CloseWindow(hWnd);
+            Sleep(2000);
+            DestroyWindow(IsWindow(hWnd) ? hWnd : NULL);
+            SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+            continue;
+        }
+        else if (_strcmpi("KillCursorWindowForce", inputBuf) == 0)
+        {
+            cout << "Wait 3 seconds";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << "." << endl;
+            POINT poi;
+            GetCursorPos(&poi);
+            HWND hWnd = WindowFromPoint(poi);
+            ULONG pid = 0;
+            GetWindowThreadProcessId(hWnd, &pid);
+            CloseWindow(hWnd);
+            Sleep(2000);
+            DestroyWindow(IsWindow(hWnd) ? hWnd : NULL);
+            SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+            PostMessage(hWnd, WM_QUIT, NULL, NULL);
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
+            if (hProcess != NULL && hProcess != INVALID_HANDLE_VALUE) {
+                TerminateProcess(hProcess, 0);
+            }
+            else {
+                cout << "Target could be killed by normal ways or can't be terminated!" << endl;
+            }
+            continue;
+        }
+        else if (_strcmpi("EnableWindow", inputBuf) == 0) {
+            cout << "Wait 3 seconds";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << "." << endl;
+            POINT poi;
+            GetCursorPos(&poi);
+            HWND hParent = WindowFromPoint(poi);
+            HWND hChild = ChildWindowFromPoint(hParent, poi);
+            EnableWindow(hParent,TRUE);
+            continue;
+        }
+        else if (_strcmpi("DisableWindow", inputBuf) == 0) {
+            cout << "Wait 3 seconds";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << ".";
+            Sleep(1000);
+            cout << "." << endl;
+            POINT poi;
+            GetCursorPos(&poi);
+            HWND hParent = WindowFromPoint(poi);
+            HWND hChild = ChildWindowFromPoint(hParent, poi);
+            EnableWindow(hParent, FALSE);
+            continue;
+            }
+        else if (_strcmpi("Lock", inputBuf) == 0) {
+            LockWorkStation();
             continue;
         }
         errno = 0;
