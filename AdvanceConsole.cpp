@@ -107,7 +107,7 @@ void PraseCDAndExecute() {
 }
 BOOL DefaultWork() {
     BOOL state = TRUE;
-    cout << "Welcome to Default State of the application." << endl <<"Input \"ChangeMode n\" to set console mode"<<endl;
+    cout << "Welcome to Default State of the application." << endl << "Use \"Help\" to view command help." << endl/* << "Input \"ChangeMode n\" to set console mode" << endl*/;
     char buf[MAX_PATH+1] = { 0 };
     
     while (TRUE) {
@@ -158,13 +158,14 @@ BOOL DefaultWork() {
             if (vctCmd.size() != 2) {
                 isPraseSuccess = FALSE;
                 ErrorTip(1000);
+                cout << "Usage:<command> FolderPath" << endl;
             }
             else {
                 PraseCDAndExecute();
             }
             continue;
         }
-        if (_strcmpi("EncryptWithMS", vctCmd[0].c_str()) == 0) {
+        if (_strcmpi("EncryptWithMS", vctCmd[0].c_str()) == 0|| _strcmpi("enms", vctCmd[0].c_str()) == 0) {
             isPraseSuccess = TRUE;
             if (vctCmd.size() == 3) {
                 char username[35] = "qwq", password[2560] = { 0 };
@@ -186,6 +187,7 @@ BOOL DefaultWork() {
             if (vctCmd.size() != 4) {
                 isPraseSuccess = FALSE;
                 ErrorTip(1000);
+                cout << "Usage:<command> SourceFilePath ResultFilePath (password)" << endl << "Tips:Passwords could be ingored,we'll ask you later" << endl;
             }
             else {
                 char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 }, password[600] = {0};
@@ -197,7 +199,7 @@ BOOL DefaultWork() {
             }
             continue;
         }
-         if (_strcmpi("DecryptWithMS", vctCmd[0].c_str()) == 0) {
+         if (_strcmpi("DecryptWithMS", vctCmd[0].c_str()) == 0|| _strcmpi("dems", vctCmd[0].c_str()) == 0) {
                 isPraseSuccess = TRUE;
                 if (vctCmd.size() == 3) {
                     char username[35] = "qwq", password[2560] = { 0 };
@@ -218,6 +220,7 @@ BOOL DefaultWork() {
                 if (vctCmd.size() != 4) {
                     isPraseSuccess = FALSE;
                     ErrorTip(1000);
+                    cout << "Usage:<command> SourceFilePath ResultFilePath (password)" << endl << "Tips:Passwords could be ingored,we'll ask you later" << endl;
                 }
                 else{
                     char Sourcepath[256] = { 0 }, Targetpath[256] = { 0 }, password[600] = { 0 };
@@ -229,7 +232,7 @@ BOOL DefaultWork() {
                 }
                 continue;
          }
-        else if (_strcmpi("sumGUID", inputBuf) == 0) {
+        if (_strcmpi("sumGUID", inputBuf) == 0|| _strcmpi("GUID", inputBuf) == 0) {
              isPraseSuccess = TRUE;
             GUID guid;
             if (CoCreateGuid(&guid) == S_OK) {
@@ -241,11 +244,12 @@ BOOL DefaultWork() {
             }
             continue;
         }
-         if (_strcmpi("GetFileMD5", vctCmd[0].c_str()) == 0) {
+         if (_strcmpi("GetFileMD5", vctCmd[0].c_str()) == 0|| _strcmpi("md5", vctCmd[0].c_str()) == 0) {
              isPraseSuccess = TRUE;
              if (vctCmd.size() != 2) {
                  isPraseSuccess = FALSE;
                  ErrorTip(1000);
+                 cout << "Usage:<command> TargetFilePath" << endl;
              }
              else {
                  if (GetFileHASH(vctCmd[1].c_str(), CALG_MD5,16,NULL)) {
@@ -259,19 +263,21 @@ BOOL DefaultWork() {
              if (vctCmd.size() != 2) {
                  isPraseSuccess = FALSE;
                  ErrorTip(1000);
+                 cout << "Usage:<command> TargetFilePath" << endl;
              }
              else {
-                 if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA1,160,NULL)) {
+                 if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA1,160,NULL)|| _strcmpi("sha", vctCmd[0].c_str()) == 0) {
                      cout << "Failed to get hash!" << endl;
                  }
              }
              continue;
          }
-         if (_strcmpi("GetFileSHA256", vctCmd[0].c_str()) == 0) {
+         if (_strcmpi("GetFileSHA256", vctCmd[0].c_str()) == 0|| _strcmpi("sha256", vctCmd[0].c_str()) == 0) {
              isPraseSuccess = TRUE;
              if (vctCmd.size() != 2) {
                  isPraseSuccess = FALSE;
                  ErrorTip(1000);
+                 cout << "Usage:<command> TargetFilePath" << endl;
              }
              else {
                  if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA_256, 256,MS_ENH_RSA_AES_PROV)) {
@@ -280,11 +286,12 @@ BOOL DefaultWork() {
              }
              continue;
          }
-         if (_strcmpi("GetFileSHA512", vctCmd[0].c_str()) == 0) {
+         if (_strcmpi("GetFileSHA512", vctCmd[0].c_str()) == 0|| _strcmpi("sha512", vctCmd[0].c_str()) == 0) {
              isPraseSuccess = TRUE;
              if (vctCmd.size() != 2) {
                  isPraseSuccess = FALSE;
                  ErrorTip(1000);
+                 cout << "Usage:<command> TargetFilePath" << endl;
              }
              else {
                  if (GetFileHASH(vctCmd[1].c_str(), CALG_SHA_512,512, MS_ENH_RSA_AES_PROV)) {
@@ -293,11 +300,12 @@ BOOL DefaultWork() {
              }
              continue;
          }
-         if (_strcmpi("Base64Encode", vctCmd[0].c_str()) == 0) {
+         if (_strcmpi("Base64Encode", vctCmd[0].c_str()) == 0||_strcmpi("b6e", vctCmd[0].c_str()) == 0) {
              isPraseSuccess = TRUE;
              if (vctCmd.size() != 2) {
                  isPraseSuccess = FALSE;
                  ErrorTip(1000);
+                 cout << "Usage:<command> SourceText" << endl;
              }
              else {
                  unsigned char* result = acl_base64_encode(vctCmd[1].c_str(), vctCmd[1].length());
@@ -305,16 +313,23 @@ BOOL DefaultWork() {
              }
              continue;
          }
-         if (_strcmpi("Base64Decode", vctCmd[0].c_str()) == 0) {
+         if (_strcmpi("Base64Decode", vctCmd[0].c_str()) == 0|| _strcmpi("B6D", vctCmd[0].c_str()) == 0) {
              isPraseSuccess = TRUE;
              if (vctCmd.size() != 2) {
                  isPraseSuccess = FALSE;
                  ErrorTip(1000);
+                 cout << "Usage:<command> SourceText" << endl;
              }
              else {
                  unsigned char* result = acl_base64_decode(vctCmd[1].c_str(), vctCmd[1].length());
                  cout << "Base64 result:" << result << endl;
              }
+             continue;
+         }
+         if (_strcmpi("help", inputBuf) == 0|| _strcmpi("hp", inputBuf) == 0) {
+             cout << "Project Link:https://github.com/love-code-yeyixiao/AdvanceConsole/\n";
+             cout << "Command Help" << endl << "help(HP)\t获取命令帮助信息" << endl << "EnableWindow(EW)\t启用鼠标所指窗口" << endl << "DisableWindow(DW)\t禁用鼠标所指窗口" << endl << "exit\t退出AdvanceConsole应用程序" << endl << "KillFocusWindow(KFW)\t关闭系统活动窗口" << endl << "KillFocusWindowForce(KFW-F)\t强制关闭活动窗口并尝试结束所属进程" << endl << "KillCursorWindow(KCW)\t关闭鼠标所指窗口" << endl << "KillCursorWindowForce(KCW-F)\t强制关闭鼠标所指窗口并尝试关闭所属进程" << endl << "EncryptWithMS(ENMS)\t使用微软接口进行文件AES对称加密" << endl << "DecryptWithMS(DEMS)\t使用微软接口进行文件AES对称解密" << endl << "SumGUID(GUID)\t生成系统范围内唯一的GUID" << endl << "Base64Encode(B6E)\t对输入文本进行Base64编码" << endl << "Base64Decode(B6D)\t对输入文本进行Base64解码" << endl << "GetFileMD5(MD5)\t对指定文件计算MD5哈希值" << endl << "GetFileSHA(SHA)\t对指定文件计算SHA-1哈希值" << endl << "GetFileSHA256(SHA256)\t对指定文件计算SHA-256哈希值" << endl << "GetFileSHA512(SHA512)\t对指定文件计算SHA-256哈希值" << endl << "Lock(LK)\t锁定用户工作站" << endl;
+             system("help");
              continue;
          }
         else if (_strcmpi("exit", inputBuf) == 0) {
@@ -332,7 +347,7 @@ BOOL DefaultWork() {
             ExitThread(0);
             exit(0);
         }
-        else if (_strcmpi("KillFocusWindow", inputBuf) == 0)
+        else if (_strcmpi("KillFocusWindow", inputBuf) == 0||_strcmpi("kfw", inputBuf) == 0)
         {
             cout << "Wait 3 seconds";
             Sleep(1000);
@@ -348,7 +363,7 @@ BOOL DefaultWork() {
             SendMessage(hWnd, WM_CLOSE, NULL, NULL);
             continue;
         }
-        else if (_strcmpi("KillFocusWindowForce", inputBuf) == 0)
+        else if (_strcmpi("KillFocusWindowForce", inputBuf) == 0|| _strcmpi("kfw-f", inputBuf) == 0)
         {
             cout << "Wait 3 seconds";
             Sleep(1000);
@@ -374,7 +389,7 @@ BOOL DefaultWork() {
             }
             continue;
         }
-        else if (_strcmpi("KillCursorWindow", inputBuf) == 0)
+        else if (_strcmpi("KillCursorWindow", inputBuf) == 0|| _strcmpi("kcw", inputBuf) == 0)
         {
             cout << "Wait 3 seconds";
             Sleep(1000);
@@ -392,7 +407,7 @@ BOOL DefaultWork() {
             SendMessage(hWnd, WM_CLOSE, NULL, NULL);
             continue;
         }
-        else if (_strcmpi("KillCursorWindowForce", inputBuf) == 0)
+        else if (_strcmpi("KillCursorWindowForce", inputBuf) == 0||_strcmpi("kcw-f", inputBuf) == 0)
         {
             cout << "Wait 3 seconds";
             Sleep(1000);
@@ -420,7 +435,7 @@ BOOL DefaultWork() {
             }
             continue;
         }
-        else if (_strcmpi("EnableWindow", inputBuf) == 0) {
+        else if (_strcmpi("EnableWindow", inputBuf) == 0|| _strcmpi("ew", inputBuf) == 0) {
             cout << "Wait 3 seconds";
             Sleep(1000);
             cout << ".";
@@ -435,7 +450,7 @@ BOOL DefaultWork() {
             EnableWindow(hParent,TRUE);
             continue;
         }
-        else if (_strcmpi("DisableWindow", inputBuf) == 0) {
+        else if (_strcmpi("DisableWindow", inputBuf) == 0|| _strcmpi("dw", inputBuf) == 0) {
             cout << "Wait 3 seconds";
             Sleep(1000);
             cout << ".";
@@ -450,7 +465,7 @@ BOOL DefaultWork() {
             EnableWindow(hParent, FALSE);
             continue;
             }
-        else if (_strcmpi("Lock", inputBuf) == 0) {
+        else if (_strcmpi("Lock", inputBuf) == 0|| _strcmpi("lk", inputBuf) == 0) {
             LockWorkStation();
             continue;
         }
