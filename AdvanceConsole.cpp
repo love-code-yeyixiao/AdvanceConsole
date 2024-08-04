@@ -32,7 +32,7 @@ BOOL checkArguments() {
 }
 BOOL initOutput() {
     const CHAR* cszTitle = "Advance Console 0.0.1 Working Version",
-        *cszNoArgu="No command arguments.",* cszCopyright="Copyright Love-Code-Yeyixiao",*cszLicense="You are now not allowed to recompile, use or distribute the application after modifying the source code.";
+        * cszNoArgu = "No command arguments.", * cszCopyright = "Copyright Love-Code-Yeyixiao";//,*cszLicense="You are now not allowed to recompile, use or distribute the application after modifying the source code.";
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED);
     for (int i = 0; i <= 10; i++)
@@ -47,7 +47,7 @@ BOOL initOutput() {
         cout << cszNoArgu<<endl;
         globalType = 1;
     }
-    cout << cszCopyright << endl  <<  cszLicense << endl;
+    cout << cszCopyright << endl  /*<< cszLicense << endl*/;
     return TRUE;
 }
 BOOL init() {
