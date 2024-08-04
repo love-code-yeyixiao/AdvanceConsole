@@ -64,7 +64,7 @@ BOOL init() {
 //
 vector<string> vctCmd;
 BOOL isPraseSuccess = FALSE;
-char inputBuf[256] = { 0 };
+char inputBuf[2560] = { 0 };
 void LogOutput(ULONG uCode) {
 
 }
@@ -111,11 +111,11 @@ BOOL DefaultWork() {
     char buf[MAX_PATH+1] = { 0 };
     
     while (TRUE) {
-        memset(inputBuf, 0, 256);
+        memset(inputBuf, 0, 2560);
         vctCmd.clear();
         GetCurrentDirectoryA(MAX_PATH, buf);
         cout << buf << ">";
-        cin.getline(inputBuf, 256);
+        cin.getline(inputBuf, 2560);
         StringSplit(inputBuf, ' ', vctCmd);
         if (vctCmd.empty()) {
             continue;
