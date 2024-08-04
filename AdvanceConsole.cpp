@@ -328,7 +328,7 @@ BOOL DefaultWork() {
          }
          if (_strcmpi("help", inputBuf) == 0|| _strcmpi("hp", inputBuf) == 0) {
              cout << "Project Link:https://github.com/love-code-yeyixiao/AdvanceConsole/\n";
-             cout << "Command Help" << endl << "help(HP)\t获取命令帮助信息" << endl << "EnableWindow(EW)\t启用鼠标所指窗口" << endl << "DisableWindow(DW)\t禁用鼠标所指窗口" << endl << "exit\t退出AdvanceConsole应用程序" << endl << "KillFocusWindow(KFW)\t关闭系统活动窗口" << endl << "KillFocusWindowForce(KFW-F)\t强制关闭活动窗口并尝试结束所属进程" << endl << "KillCursorWindow(KCW)\t关闭鼠标所指窗口" << endl << "KillCursorWindowForce(KCW-F)\t强制关闭鼠标所指窗口并尝试关闭所属进程" << endl << "EncryptWithMS(ENMS)\t使用微软接口进行文件AES对称加密" << endl << "DecryptWithMS(DEMS)\t使用微软接口进行文件AES对称解密" << endl << "SumGUID(GUID)\t生成系统范围内唯一的GUID" << endl << "Base64Encode(B6E)\t对输入文本进行Base64编码" << endl << "Base64Decode(B6D)\t对输入文本进行Base64解码" << endl << "GetFileMD5(MD5)\t对指定文件计算MD5哈希值" << endl << "GetFileSHA(SHA)\t对指定文件计算SHA-1哈希值" << endl << "GetFileSHA256(SHA256)\t对指定文件计算SHA-256哈希值" << endl << "GetFileSHA512(SHA512)\t对指定文件计算SHA-256哈希值" << endl << "Lock(LK)\t锁定用户工作站" << endl;
+             cout << "Command Help" << endl << "Help(HP)\t获取命令帮助信息" << endl << "EnableWindow(EW)\t启用鼠标所指窗口" << endl << "DisableWindow(DW)\t禁用鼠标所指窗口" << endl << "Exit\t退出AdvanceConsole应用程序" << endl << "KillFocusWindow(KFW)\t关闭系统活动窗口" << endl << "KillFocusWindowForce(KFW-F)\t强制关闭活动窗口并尝试结束所属进程" << endl << "KillCursorWindow(KCW)\t关闭鼠标所指窗口" << endl << "KillCursorWindowForce(KCW-F)\t强制关闭鼠标所指窗口并尝试关闭所属进程" << endl << "EncryptWithMS(ENMS)\t使用微软接口进行文件AES对称加密" << endl << "DecryptWithMS(DEMS)\t使用微软接口进行文件AES对称解密" << endl << "SumGUID(GUID)\t生成系统范围内唯一的GUID" << endl << "Base64Encode(B6E)\t对输入文本进行Base64编码" << endl << "Base64Decode(B6D)\t对输入文本进行Base64解码" << endl << "GetFileMD5(MD5)\t对指定文件计算MD5哈希值" << endl << "GetFileSHA(SHA)\t对指定文件计算SHA-1哈希值" << endl << "GetFileSHA256(SHA256)\t对指定文件计算SHA-256哈希值" << endl << "GetFileSHA512(SHA512)\t对指定文件计算SHA-256哈希值" << endl << "Lock(LK)\t锁定用户工作站" << endl;
              system("help");
              continue;
          }
@@ -378,7 +378,7 @@ BOOL DefaultWork() {
             CloseWindow(hWnd);
             Sleep(2000);
             DestroyWindow(IsWindow(hWnd) ? hWnd : NULL);
-            SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+            PostMessage(hWnd, WM_CLOSE, NULL, NULL);
             PostMessage(hWnd, WM_QUIT, NULL, NULL);
             HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
             if (hProcess != NULL && hProcess != INVALID_HANDLE_VALUE) {
@@ -424,7 +424,7 @@ BOOL DefaultWork() {
             CloseWindow(hWnd);
             Sleep(2000);
             DestroyWindow(IsWindow(hWnd) ? hWnd : NULL);
-            SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+            PostMessage(hWnd, WM_CLOSE, NULL, NULL);
             PostMessage(hWnd, WM_QUIT, NULL, NULL);
             HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
             if (hProcess != NULL && hProcess != INVALID_HANDLE_VALUE) {
