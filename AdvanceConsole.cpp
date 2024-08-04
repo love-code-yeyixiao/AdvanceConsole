@@ -30,9 +30,9 @@ static long globalType = 0;
 BOOL checkArguments() {
     return FALSE;
 }
+const CHAR* cszTitle = "Advance Console 0.0.1 Prerelease";
 BOOL initOutput() {
-    const CHAR* cszTitle = "Advance Console 0.0.1 Working Version",
-        * cszNoArgu = "No command arguments.", * cszCopyright = "Copyright Love-Code-Yeyixiao";//,*cszLicense="You are now not allowed to recompile, use or distribute the application after modifying the source code.";
+    const CHAR* cszNoArgu = "No command arguments.", * cszCopyright = "Copyright Love-Code-Yeyixiao";//,*cszLicense="You are now not allowed to recompile, use or distribute the application after modifying the source code.";
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED);
     for (int i = 0; i <= 10; i++)
@@ -53,7 +53,7 @@ BOOL initOutput() {
 BOOL init() {
     BOOL status = TRUE;
     status=initOutput();
-    SetConsoleTitleA("Advance Console 0.0.1 Working Version");
+    SetConsoleTitleA(cszTitle);
     return status;
 }
 
